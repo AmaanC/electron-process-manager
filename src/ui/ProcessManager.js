@@ -48,6 +48,21 @@ export default class ProcessManager extends React.Component {
     return process.webContents[0].id;
   }
 
+  handleStopAllProcesses() {
+    for (let p of this.state.processData.filter(p => {
+      // TODO: Better way to not freeze self (process manager UI)
+      return p.type.toLowerCase() === 'tab' && !p.webContents[0].URL.endsWith('process-manager.html');
+    })) {
+      ipcRenderer.send('process-manager:stop-process', p.pid);
+    }
+  }
+  handleContAllProcesses() {
+    const pids = this.state.processData.map(p => p.pid);
+    for (let pid of pids) {
+      ipcRenderer.send('process-manager:cont-process', pid);
+    }
+  }
+
   handleStopProcess() {
     const pid = this.state.selectedPid;
     if (!pid) return;
@@ -91,6 +106,8 @@ export default class ProcessManager extends React.Component {
             disableKill={!this.canKill()}
             onStopClick={this.handleStopProcess.bind(this)}
             onContClick={this.handleContProcess.bind(this)}
+            onStopAllClick={this.handleStopAllProcesses.bind(this)}
+            onContAllClick={this.handleContAllProcesses.bind(this)}
             disabelOpenDevTool={!this.canOpenDevTool()}
             onOpenDevToolClick={this.handleOpenDevTool.bind(this)}
 
