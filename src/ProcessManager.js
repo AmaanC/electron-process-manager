@@ -23,7 +23,8 @@ class ProcessManager extends EventEmitter {
     this.window = new ProcessManagerWindow();
     this.window.defaultSorting = options.defaultSorting || {};
     this.window.showWhenReady();
-    this.window.on('kill-process', pid => this.killProcess(pid))
+    this.window.on('stop-process', pid => this.stopProcess(pid))
+    this.window.on('cont-process', pid => this.contProcess(pid))
     this.window.on('open-dev-tools', webContentsId => this.openDevTools(webContentsId))
     this.window.on('closed', () => this.window = null)
     this.emit('open-window', this.window);
@@ -31,10 +32,16 @@ class ProcessManager extends EventEmitter {
     return this.window;
   }
 
-  killProcess(pid) {
-    this.emit('will-kill-process', pid, this.window);
-    process.kill(pid);
-    this.emit('killed-process', pid, this.window);
+  contProcess(pid) {
+    this.emit('will-cont-process', pid, this.window);
+      process.kill(pid, 'SIGCONT');
+    this.emit('continued-process', pid, this.window);
+  }
+
+  stopProcess(pid) {
+    this.emit('will-stop-process', pid, this.window);
+      process.kill(pid, 'SIGSTOP');
+    this.emit('stopped-process', pid, this.window);
   }
 
   openDevTools(webContentsId) {

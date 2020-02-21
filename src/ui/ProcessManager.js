@@ -48,10 +48,15 @@ export default class ProcessManager extends React.Component {
     return process.webContents[0].id;
   }
 
-  handleKillProcess() {
+  handleStopProcess() {
     const pid = this.state.selectedPid;
     if (!pid) return;
-    ipcRenderer.send('process-manager:kill-process', pid);
+    ipcRenderer.send('process-manager:stop-process', pid);
+  }
+  handleContProcess() {
+    const pid = this.state.selectedPid;
+    if (!pid) return;
+    ipcRenderer.send('process-manager:cont-process', pid);
   }
 
   handleOpenDevTool() {
@@ -84,7 +89,8 @@ export default class ProcessManager extends React.Component {
         <header className="toolbar toolbar-header">
           <ToolBar
             disableKill={!this.canKill()}
-            onKillClick={this.handleKillProcess.bind(this)}
+            onStopClick={this.handleStopProcess.bind(this)}
+            onContClick={this.handleContProcess.bind(this)}
             disabelOpenDevTool={!this.canOpenDevTool()}
             onOpenDevToolClick={this.handleOpenDevTool.bind(this)}
 

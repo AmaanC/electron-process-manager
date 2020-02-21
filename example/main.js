@@ -4,7 +4,8 @@ var join = require('path').join;
 var processManager = require('..');
 const defaultMenu = require('electron-default-menu');
 
-processManager.on('killed-process', pid => console.log('Killed process', pid));
+processManager.on('stopped-process', pid => console.log('Stopped process', pid));
+processManager.on('continued-process', pid => console.log('continued process', pid));
 
 app.once('window-all-closed', function () { app.quit(); });
 

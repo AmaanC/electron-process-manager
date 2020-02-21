@@ -42,12 +42,19 @@ class ProcessManagerWindow extends BrowserWindow {
   attachProcessReporter() {
     this.subscription = onExtendedProcessMetrics(app)
       .subscribe(report => this.sendStatsReport(report))
-    ipcMain.on('process-manager:kill-process', (e, pid) => {
+    ipcMain.on('process-manager:stop-process', (e, pid) => {
       // ignore if not for us
       if (!this || this.isDestroyed()) return;
       if (e.sender !== this.webContents) return;
 
-      this.emit('kill-process', pid);
+      this.emit('stop-process', pid);
+    });
+    ipcMain.on('process-manager:cont-process', (e, pid) => {
+      // ignore if not for us
+      if (!this || this.isDestroyed()) return;
+      if (e.sender !== this.webContents) return;
+
+      this.emit('cont-process', pid);
     });
     ipcMain.on('process-manager:open-dev-tools', (e, webContentsId) => {
       // ignore if not for us

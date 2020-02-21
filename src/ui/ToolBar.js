@@ -4,7 +4,8 @@ import PropTypes from 'prop-types';
 export default class ToolBar extends React.Component {
 
   static propTypes = {
-    onKillClick: PropTypes.func,
+    onStopClick: PropTypes.func,
+    onContClick: PropTypes.func,
     disableKill: PropTypes.bool,
     onOpenDevToolClick: PropTypes.func,
     disabelOpenDevTool: PropTypes.bool
@@ -17,9 +18,16 @@ export default class ToolBar extends React.Component {
               <button
                 className="btn btn-default"
                 disabled={this.props.disableKill}
-                onClick={this.props.onKillClick}
+                onClick={this.props.onStopClick}
               >
-                End process
+                Pause process
+              </button>
+              <button
+                className="btn btn-default"
+                disabled={this.props.disableKill}
+                onClick={this.props.onContClick}
+              >
+                Resume process
               </button>
               <button
                 className="btn btn-default"
